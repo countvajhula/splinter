@@ -1,0 +1,64 @@
+h1. Introduction
+
+A simple (and scrappy) graph stress tester based on the Tinkerpop stack -- i.e. Blueprints, Gremlin, Pipes. You can use it to:
+* quickly create randomly generated graphs of whatever configuration you want (you can specify number of vertices and level of connectivity)
+* benchmark different graph database providers on some defined metrics
+
+To use:
+
+$ ./GraphStressTester <testdefinitionfile.xml>
+
+The test definition file is pretty straightforward XML (see sampletestdefinition.xml for a comprehensive example) like so:
+<sampletestdefinition>
+	<graphs>
+		<graph type="tinkergraph" overwrite="no">
+			<vertices>100</vertices>
+			<connectivity>
+				<function>linear</function>
+				<arg>0.2</arg>
+			</connectivity>
+		</graph>
+		<!-- add more graphs here if you want to get crazy -->
+	</graphs>
+	<tests>
+		<test name="getEdgesBetweenVertices">
+			<times>100</times>
+		</test>
+		<test name="getNeighbors">
+			<times>100</times>
+		</test>
+		<!-- these are the only pre-loaded metrics. You can add your own fairly easily by modifying the file TestMetrics.groovy, if you want to get crazy -->
+	</tests>
+</sampletestdefinition>
+
+Example output:
+
+$./GraphStressTester.groovy sampletestdefinition.xml
+...
+-ACQUIRED- GRAPH WRITE CONNECTION [./dbs/tinkergraph_100vertices_linear0.2connxns]
+TinkerGraph graph initialized.
+Graph empty or overwrite set to true. Recreating graph.
+Adding 100 vertices...
+0 vertices added...
+Cannot flush transaction buffer: no transaction in progress!
+Adding random edges to nodes...
+0 edges added...
+-RELEASED- GRAPH WRITE CONNECTION [./dbs/tinkergraph_100vertices_linear0.2connxns]
+Running getNeighbors...
+profiler results:
+------PROFILER RESULTS (tinkergraph_100vertices_linear0.2connxns--getneighbors) ------
+Total Duration = 152.004 ms
+getNeighbors:	149.073 ms	98.07176127 %
+getVertex:	1.988 ms	1.30786032 %
+hashCode:	0.595 ms	0.39143707 %
+equals:	0.348 ms	0.22894134 %
+super$2$getElementProperty:	0.0 ms	0.0 %
+$createCallSiteArray:	0.0 ms	0.0 %
+super$2$getAllEdges:	0.0 ms	0.0 %
+super$2$removeEdge:	0.0 ms	0.0 %
+super$2$this$dist$set$2:	0.0 ms	0.0 %
+... etc.
+
+------xxxxxxxxxxxxxxxx (tinkergraph_100vertices_linear0.2connxns--getneighbors) ------
+
+
