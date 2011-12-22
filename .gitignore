@@ -37,3 +37,6 @@ profile
 
 # maven build output
 target
+
+# output graph dbs
+dbs

@@ -1,0 +1,33 @@
+<sampletestdefinition>
+	<graphs>
+		<graph type="neo4j" overwrite="yes">
+			<vertices>1000</vertices>
+			<connectivity>
+				<function>constant</function>
+				<arg>10</arg>
+			</connectivity>
+		</graph>
+		<graph type="tinkergraph" overwrite="no">
+			<vertices>100</vertices>
+			<connectivity>
+				<function>linear</function>
+				<arg>0.2</arg>
+			</connectivity>
+		</graph>
+		<graph type="orientdb" overwrite="no">
+			<vertices>1000</vertices>
+			<connectivity>
+				<function>log</function>
+				<arg>2</arg>
+			</connectivity>
+		</graph>
+	</graphs>
+	<tests>
+		<test name="getEdgesBetweenVertices">
+			<times>100</times>
+		</test>
+		<test name="getNeighbors">
+			<times>100</times>
+		</test>
+	</tests>
+</sampletestdefinition>
