@@ -59,6 +59,5 @@ super$2$getAllEdges:	0.0 ms	0.0 %
 super$2$removeEdge:	0.0 ms	0.0 %
 super$2$this$dist$set$2:	0.0 ms	0.0 %
 ... etc.
-
-bc. ------xxxxxxxxxxxxxxxx (tinkergraph_100vertices_linear0.2connxns--getneighbors) ------
+------xxxxxxxxxxxxxxxx (tinkergraph_100vertices_linear0.2connxns--getneighbors) ------
 
