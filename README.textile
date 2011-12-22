@@ -10,8 +10,7 @@ bc. $ ./GraphStressTester <testdefinitionfile.xml>
 
 p. The test definition file is pretty straightforward XML (see sampletestdefinition.xml for a comprehensive example) like so:
 
-bc.
-<sampletestdefinition>
+bc. <sampletestdefinition>
 	<graphs>
 		<graph type="tinkergraph" overwrite="no">
 			<vertices>100</vertices>
@@ -61,6 +60,5 @@ super$2$removeEdge:	0.0 ms	0.0 %
 super$2$this$dist$set$2:	0.0 ms	0.0 %
 ... etc.
 
-------xxxxxxxxxxxxxxxx (tinkergraph_100vertices_linear0.2connxns--getneighbors) ------
+bc. ------xxxxxxxxxxxxxxxx (tinkergraph_100vertices_linear0.2connxns--getneighbors) ------
 
-p.
