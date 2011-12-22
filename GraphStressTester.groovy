@@ -10,27 +10,13 @@ import java.lang.Math
 import java.util.Random
 import com.pilot.*
 import com.pilot.GraphInterface.GraphProvider
+import GSTUtils
+import TestMetrics
 
 //N, connectivity-string, out is >
 public class GraphStressTester {
 
 	public static final String DB_URL_PREFIX = "./dbs/"
-
-	/*public static enum GraphProvider {
-		ORIENTDB("orientdb"),
-		NEO4J("neo4j");
-
-		private final String providerName
-
-		private GraphProvider(String providerName) {
-			this.providerName = providerName
-		}
-
-		public String toString() {
-			return providerName
-		}
-	}
-	*/
 
 	public static enum GraphConnectivity {
 		CONSTANT("constant"),
@@ -49,21 +35,6 @@ public class GraphStressTester {
 		}
 	}
 
-	public static enum TestMetrics {
-		GETNEIGHBORS("getneighbors"),
-		GETEDGESBETWEENVERTICES("getedgesbetweenvertices");
-
-		private final String metricName
-
-		private TestMetrics(String metricName) {
-			this.metricName = metricName
-		}
-
-		public String toString() {
-			return metricName
-		}
-	}
-
 	// Number of vertices
 	private long N
 
@@ -75,9 +46,6 @@ public class GraphStressTester {
 
 	// Graph db provider
 	private GraphProvider graphProvider
-
-	// Random number generator
-	private Random randGen
 
 
 	public GraphStressTester(GraphProvider graphProvider, long N, GraphConnectivity connectivityFn, double arg) {
@@ -126,8 +94,6 @@ public class GraphStressTester {
 
 		graphName = graphNamePfx + "_" + N.toString() + "vertices" + "_" + connectivityFn.toString() + argName + "connxns"
 
-		randGen = new Random() //initialize random number generator
-
 	}
 
 	public long getN() {
@@ -136,6 +102,10 @@ public class GraphStressTester {
 
 	public void setN(long N) {
 		this.N = N
+	}
+
+	public String getGraphName() {
+		return graphName
 	}
 
 	public GraphInterface initializeGraphDb() {
@@ -158,11 +128,12 @@ public class GraphStressTester {
 	public void addRandomEdges(GraphInterface graph, List vertices) {
 		println "Adding random edges to nodes..."
 		long numVertices = vertices.size()
+		Random random = new Random()
 		//randomly pick pairs of vertices - edgesPerVertex vertices for every vertex
 		for (v1 in vertices) {
 			for (int i=0; i<edgesPerVertex; i++) {
 				//pick a random vertex
-				long randNum = nextLong(randGen, numVertices)
+				long randNum = GSTUtils.nextLong(random, numVertices)
 				Vertex v2 = vertices[randNum]
 				graph.addEdge(v1, v2, 'knows')
 			}
@@ -174,9 +145,9 @@ public class GraphStressTester {
 		println "Adding random edges to nodes..."
 		long numVertices = N //graph.getVertexCount()
 		for (long i=0; i<edgesPerVertex*numVertices; i++) {
-			Vertex v1 = selectRandomVertex(graph, numVertices)
+			Vertex v1 = GSTUtils.selectRandomVertex(graph, numVertices)
 			if (v1) {
-				Vertex v2 = selectRandomVertex(graph, numVertices)
+				Vertex v2 = GSTUtils.selectRandomVertex(graph, numVertices)
 				if (v2) {
 					graph.addEdge(v1, v2, 'knows')
 				}
@@ -188,39 +159,11 @@ public class GraphStressTester {
 		}
 	}
 
-	private long nextLong(Random rng, long n) {
-		// error checking and 2^x checking removed for simplicity.
-		long bits, val;
-		bits = 0; val = n
-		while (bits-val+(n-1) < 0L) {
-			bits = (rng.nextLong() << 1) >>> 1;
-			val = bits % n;
-		} 
-		return val;
-	}
-
-	private Vertex selectRandomVertex(GraphInterface graph, long numVertices) {
-		long randNum = nextLong(randGen, numVertices)
-		Vertex v1
-		int tries = 0
-		while (!v1 && tries<1) { //might be good to set #tries to 1
-			v1 = graph.getVertex(randNum)
-			tries++
-		}
-
-		return v1
-	}
-
-	private Vertex selectRandomVertex(GraphInterface graph, long numVertices, List vertices) {
-		long randNum = nextLong(randGen, numVertices)
-		return vertices[(int)randNum]
-	}
-
 	public void removeRandomVertices(GraphInterface graph, List vertices) {
 		//remove log N vertices
-		Random random = new Random()
 		int numVertices = vertices.size()
 		int logN = Math.round((Math.log(numVertices))/(Math.log(2)))
+		Random random = new Random()
 		for (int i=0; i<logN; i++) {
 			numVertices = vertices.size()
 			if (numVertices == 0) {
@@ -249,50 +192,6 @@ public class GraphStressTester {
 		addRandomEdgesER(graph)
 
 		graph.concludeManagedTransaction()
-
-		String results = GraphManagerProxy.stopProfiler((GraphInterface)graph)
-		println "profiler results:${results}"
-
-		graph.shutdown()
-	}
-
-
-	public void runGetNeighbors(int ntimes) {
-
-		println "Running getNeighbors..."
-
-		GraphInterface graph = initializeGraphDb()
-		long numVertices = N //graph.getVertexCount()
-
-		String testName = graphName + "--" + TestMetrics.GETNEIGHBORS.toString()
-		GraphManagerProxy.startProfiler((GraphInterface)graph, testName)
-
-		for (int i=0; i<ntimes; i++) {
-			Vertex v1 = selectRandomVertex(graph, numVertices)
-			def neighbors = graph.getNeighbors(v1, null, null) //
-		}
-
-		String results = GraphManagerProxy.stopProfiler((GraphInterface)graph)
-		println "profiler results:${results}"
-
-		graph.shutdown()
-	}
-
-	public void runGetEdgesBetweenVertices(int ntimes) {
-
-		println "Running getEdgesBetweenVertices..."
-
-		GraphInterface graph = initializeGraphDb()
-		long numVertices = N //graph.getVertexCount()
-
-		String testName = graphName + "--" + TestMetrics.GETEDGESBETWEENVERTICES.toString()
-		GraphManagerProxy.startProfiler((GraphInterface)graph, testName)
-
-		for (int i=0; i<ntimes; i++) {
-			Vertex v1 = selectRandomVertex(graph, numVertices)
-			Vertex v2 = selectRandomVertex(graph, numVertices)
-			Edge edge = graph.getEdges(v1, v2, null)[0]
-		}
 
 		String results = GraphManagerProxy.stopProfiler((GraphInterface)graph)
 		println "profiler results:${results}"
@@ -376,16 +275,21 @@ public class GraphStressTester {
 			for (test in tests) {
 				def testName = test.attributes()['name'].toLowerCase()
 				int ntimes = test.times.text().toInteger()
+
+				g = gst.initializeGraphDb()
+
 				switch (testName) {
-					case TestMetrics.GETNEIGHBORS.toString():
-						gst.runGetNeighbors(ntimes)
+					case TestMetrics.Metrics.GETNEIGHBORS.toString():
+						TestMetrics.runGetNeighbors(g, ntimes, gst.getGraphName())
 						break
-					case TestMetrics.GETEDGESBETWEENVERTICES.toString():
-						gst.runGetEdgesBetweenVertices(ntimes)
+					case TestMetrics.Metrics.GETEDGESBETWEENVERTICES.toString():
+						TestMetrics.runGetEdgesBetweenVertices(g, ntimes, gst.getGraphName())
 						break
 					default:
 						println "No such test: ${testName}!"
 				}
+
+				g.shutdown()
 			}
 		}
 	}
