@@ -6,7 +6,8 @@ A simple graph stress tester based on the Pilot graph operator, utilizing the Ti
 
 To use:
 
-bc. $ ./GraphTestManager <testdefinitionfile.xml>
+bc. $ groovyc *.groovy
+$ ./GraphTestManager.groovy <testdefinitionfile.xml>
 
 p. The test definition file is pretty straightforward XML (see sampletestdefinition.xml for a comprehensive example) like so:
 
