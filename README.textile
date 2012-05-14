@@ -1,12 +1,12 @@
 h1. Introduction
 
-A simple (and scrappy) graph stress tester based on the Pilot graph operator, utilizing the Tinkerpop stack -- i.e. Blueprints, Gremlin, Pipes. You can use it to:
+A simple graph stress tester based on the Pilot graph operator, utilizing the Tinkerpop stack -- i.e. Blueprints, Gremlin, Pipes. You can use it to:
 * quickly create randomly generated graphs of whatever configuration you want (you can specify number of vertices and level of connectivity)
 * benchmark different graph database providers on some defined metrics
 
 To use:
 
-bc. $ ./GraphStressTester <testdefinitionfile.xml>
+bc. $ ./GraphTestManager <testdefinitionfile.xml>
 
 p. The test definition file is pretty straightforward XML (see sampletestdefinition.xml for a comprehensive example) like so:
 
@@ -36,15 +36,8 @@ p. Example output:
 
 bc. $./GraphStressTester.groovy sampletestdefinition.xml
 ...
--ACQUIRED- GRAPH WRITE CONNECTION [./dbs/tinkergraph_100vertices_linear0.2connxns]
 TinkerGraph graph initialized.
 Graph empty or overwrite set to true. Recreating graph.
-Adding 100 vertices...
-0 vertices added...
-Cannot flush transaction buffer: no transaction in progress!
-Adding random edges to nodes...
-0 edges added...
--RELEASED- GRAPH WRITE CONNECTION [./dbs/tinkergraph_100vertices_linear0.2connxns]
 Running getNeighbors...
 profiler results:
 ------PROFILER RESULTS (tinkergraph_100vertices_linear0.2connxns--getneighbors) ------

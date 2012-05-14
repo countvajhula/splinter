@@ -1,20 +1,18 @@
-#!/usr/bin/env groovy
-
+import java.lang.Math
+import java.util.Random
+import java.lang.reflect.Method
 import com.tinkerpop.blueprints.*
 import com.tinkerpop.blueprints.pgm.*
 import com.tinkerpop.blueprints.pgm.impls.neo4j.*
 import com.tinkerpop.blueprints.pgm.impls.orientdb.*
 import com.tinkerpop.blueprints.pgm.util.*
-import com.tinkerpop.blueprints.pgm.util.graphml.GraphMLReader
-import java.lang.Math
-import java.util.Random
 import com.pilot.*
 import com.pilot.GraphInterface.GraphProvider
 import GSTUtils
 import TestMetrics
 
 //N, connectivity-string, out is >
-public class GraphStressTester {
+public class StressTester {
 
 	public static final String DB_URL_PREFIX = "./dbs/"
 
@@ -47,11 +45,19 @@ public class GraphStressTester {
 	// Graph db provider
 	private GraphProvider graphProvider
 
+	// overwrite if existing graph
+	private boolean overwrite
 
-	public GraphStressTester(GraphProvider graphProvider, long N, GraphConnectivity connectivityFn, double arg) {
+	// Map of metrics and #times to run them
+	private List metrics
+
+
+	public StressTester(GraphProvider graphProvider, long N, GraphConnectivity connectivityFn, double arg, boolean overwrite, List metrics) {
 
 		this.N = N
 		this.graphProvider = graphProvider
+		this.overwrite = overwrite
+		this.metrics = metrics
 
 		String argName = arg.toString()
 		switch (connectivityFn) {
@@ -106,6 +112,45 @@ public class GraphStressTester {
 
 	public String getGraphName() {
 		return graphName
+	}
+
+	public void launch() {
+		generateOrInspectGraph()
+		runSpecifiedMetrics()
+	}
+
+	private void generateOrInspectGraph() {
+		// if graph does not exist or overwrite is set to true, generate a random graph
+		// according to specification
+		// otherwise assert declared # of vertices matches actual number if graph exists
+		GraphInterface g = initializeGraphDb()
+		long vertexCount = g.getVertexCount()
+		g.shutdown()
+		if (overwrite || vertexCount == 0) {
+			println "Graph empty or overwrite set to true. Recreating graph.\n"
+			createRandomGraph()
+		} else {
+			if (vertexCount != N) {
+				println "Warning: declared # of vertices does not match actual # of vertices in the graph"
+				this.N = vertexCount
+			}
+		}
+	}
+
+	private void runSpecifiedMetrics() {
+		for (metric in metrics) {
+			String testName = metric['testName']
+			int ntimes = metric['ntimes']
+
+			Method m
+			try {
+				m = TestMetrics.class.getDeclaredMethod(testName, StressTester.class, Integer.TYPE)
+				m.setAccessible(true)
+				m.invoke(null, this, ntimes)
+			} catch (Exception e) {
+				println "No such test: ${testName}! Exception: ${e}"
+			}
+		}
 	}
 
 	public GraphInterface initializeGraphDb() {
@@ -197,100 +242,5 @@ public class GraphStressTester {
 		println "profiler results:${results}"
 
 		graph.shutdown()
-	}
-
-	public static void main(String[] args) {
-
-		if (!args || args.size() == 0) {
-			println "Usage ./GraphStressTest <testdefinitionfile.xml>"
-			return
-		}
-
-		GraphProvider provider
-		GraphConnectivity connectivity
-		boolean overwrite = false
-
-		def testconfig = new XmlParser().parse(new File(args[0]))
-		def graphs = testconfig.graphs.graph
-		def tests = testconfig.tests.test
-		for (graph in graphs) {
-			def graphType = graph.attributes()['type']
-			switch (graphType) {
-				case 'tinkergraph':
-					provider = GraphProvider.TINKERGRAPH
-					break
-				case 'neo4j':
-					provider = GraphProvider.NEO4J
-					break
-				case 'orientdb':
-					provider = GraphProvider.ORIENTDB
-					break
-				default:
-					println "unrecognized graph provider!"
-					//TODO: set to tinkergraph
-			}
-			def graphOverwrite = graph.attributes()['overwrite']
-			if (graphOverwrite.toLowerCase() == "yes") {
-				overwrite = true
-			} else {
-				overwrite = false
-			}
-
-			long N = graph.vertices.text().toInteger()
-			def connectivityFn = graph.connectivity.function.text()
-			double arg //TODO: fix
-			switch (connectivityFn) {
-				case 'log':
-					connectivity = GraphConnectivity.LOG
-					arg = graph.connectivity.arg.text().toInteger()
-					break
-				case 'linear':
-					connectivity = GraphConnectivity.LINEAR
-					arg = graph.connectivity.arg.text().toDouble()
-					break
-				case 'constant':
-					connectivity = GraphConnectivity.CONSTANT
-					arg = graph.connectivity.arg.text().toDouble()
-					break
-				default:
-					connectivity = GraphConnectivity.NONE
-					arg = 0
-			}
-
-			GraphStressTester gst = new GraphStressTester(provider, N, connectivity, arg)
-			GraphInterface g = gst.initializeGraphDb()
-			long vertexCount = g.getVertexCount()
-			g.shutdown()
-			if (overwrite || vertexCount == 0) {
-				println "Graph empty or overwrite set to true. Recreating graph.\n"
-				gst.createRandomGraph()
-			} else {
-				if (vertexCount != gst.getN()) {
-					println "Warning: declared # of vertices does not match actual # of vertices in the graph"
-					gst.setN(vertexCount)
-				}
-			}
-
-			//for each graph defined, run the tests specified
-			for (test in tests) {
-				def testName = test.attributes()['name'].toLowerCase()
-				int ntimes = test.times.text().toInteger()
-
-				g = gst.initializeGraphDb()
-
-				switch (testName) {
-					case TestMetrics.Metrics.GETNEIGHBORS.toString():
-						TestMetrics.runGetNeighbors(g, ntimes, gst.getGraphName())
-						break
-					case TestMetrics.Metrics.GETEDGESBETWEENVERTICES.toString():
-						TestMetrics.runGetEdgesBetweenVertices(g, ntimes, gst.getGraphName())
-						break
-					default:
-						println "No such test: ${testName}!"
-				}
-
-				g.shutdown()
-			}
-		}
 	}
 }

@@ -1,10 +1,8 @@
-
 import com.tinkerpop.blueprints.*
 import com.tinkerpop.blueprints.pgm.*
 import com.tinkerpop.blueprints.pgm.impls.neo4j.*
 import com.tinkerpop.blueprints.pgm.impls.orientdb.*
 import com.tinkerpop.blueprints.pgm.util.*
-import com.tinkerpop.blueprints.pgm.util.graphml.GraphMLReader
 import com.pilot.*
 import java.util.Random
 
