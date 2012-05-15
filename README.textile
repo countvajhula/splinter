@@ -1,10 +1,17 @@
 h1. Introduction
 
-A simple graph stress tester based on the Pilot graph operator, utilizing the Tinkerpop stack -- i.e. Blueprints, Gremlin, Pipes. You can use it to:
-* quickly create randomly generated graphs of whatever configuration you want (you can specify number of vertices and level of connectivity)
-* benchmark different graph database providers on some defined metrics
+A simple automated graph stress test tool based on the Pilot graph operator, utilizing the Tinkerpop stack -- i.e. Blueprints, Gremlin, Pipes. You can use it to:
+* *quickly generate random graphs* of whatever configuration you want (you can specify number of vertices and level of connectivity)
+* *benchmark* different graph database providers on some defined metrics
+* *automate* sets of tests to be run on any number of graphs
 
-To use:
+h1. To Use:
+
+h2. Dependencies
+
+Make sure you have Pilot, the Tinkerpop libraries, and your favorite graph database already in your system CLASSPATH.
+
+h2. Running
 
 bc. $ groovyc *.groovy
 $ ./GraphTestManager.groovy <testdefinitionfile.xml>
@@ -33,7 +40,7 @@ bc. <sampletestdefinition>
 	</tests>
 </sampletestdefinition>
 
-p. Example output:
+h2. Example output:
 
 bc. $./GraphStressTester.groovy sampletestdefinition.xml
 ...
