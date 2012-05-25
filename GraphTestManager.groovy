@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-import com.pilot.GraphInterface.GraphProvider
+import com.countvajhula.pilot.GraphInterface.GraphProvider
 import StressTester
 import StressTester.GraphConnectivity
 

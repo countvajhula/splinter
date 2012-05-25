@@ -3,7 +3,7 @@ import com.tinkerpop.blueprints.pgm.*
 import com.tinkerpop.blueprints.pgm.impls.neo4j.*
 import com.tinkerpop.blueprints.pgm.impls.orientdb.*
 import com.tinkerpop.blueprints.pgm.util.*
-import com.pilot.*
+import com.countvajhula.pilot.*
 import GSTUtils
 import StressTester
 

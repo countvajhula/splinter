@@ -6,8 +6,8 @@ import com.tinkerpop.blueprints.pgm.*
 import com.tinkerpop.blueprints.pgm.impls.neo4j.*
 import com.tinkerpop.blueprints.pgm.impls.orientdb.*
 import com.tinkerpop.blueprints.pgm.util.*
-import com.pilot.*
-import com.pilot.GraphInterface.GraphProvider
+import com.countvajhula.pilot.*
+import com.countvajhula.pilot.GraphInterface.GraphProvider
 import GSTUtils
 import TestMetrics
 
