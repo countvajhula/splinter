@@ -1,3 +1,5 @@
+package com.countvajhula.splinter
+
 import com.tinkerpop.blueprints.*
 import com.tinkerpop.blueprints.pgm.*
 import com.tinkerpop.blueprints.pgm.impls.neo4j.*
@@ -6,7 +8,7 @@ import com.tinkerpop.blueprints.pgm.util.*
 import com.countvajhula.pilot.*
 import java.util.Random
 
-public class GSTUtils {
+public class SplinterUtils {
 
 	// Random number generator
 	static Random randGen

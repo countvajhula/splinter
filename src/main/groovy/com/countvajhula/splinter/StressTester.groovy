@@ -1,3 +1,5 @@
+package com.countvajhula.splinter
+
 import java.lang.Math
 import java.util.Random
 import java.lang.reflect.Method
@@ -8,7 +10,7 @@ import com.tinkerpop.blueprints.pgm.impls.orientdb.*
 import com.tinkerpop.blueprints.pgm.util.*
 import com.countvajhula.pilot.*
 import com.countvajhula.pilot.GraphInterface.GraphProvider
-import GSTUtils
+import SplinterUtils
 import TestMetrics
 
 //N, connectivity-string, out is >
@@ -178,7 +180,7 @@ public class StressTester {
 		for (v1 in vertices) {
 			for (int i=0; i<edgesPerVertex; i++) {
 				//pick a random vertex
-				long randNum = GSTUtils.nextLong(random, numVertices)
+				long randNum = SplinterUtils.nextLong(random, numVertices)
 				Vertex v2 = vertices[randNum]
 				graph.addEdge(v1, v2, 'knows')
 			}
@@ -190,9 +192,9 @@ public class StressTester {
 		println "Adding random edges to nodes..."
 		long numVertices = N //graph.getVertexCount()
 		for (long i=0; i<edgesPerVertex*numVertices; i++) {
-			Vertex v1 = GSTUtils.selectRandomVertex(graph, numVertices)
+			Vertex v1 = SplinterUtils.selectRandomVertex(graph, numVertices)
 			if (v1) {
-				Vertex v2 = GSTUtils.selectRandomVertex(graph, numVertices)
+				Vertex v2 = SplinterUtils.selectRandomVertex(graph, numVertices)
 				if (v2) {
 					graph.addEdge(v1, v2, 'knows')
 				}

@@ -1,11 +1,16 @@
 #!/usr/bin/env groovy
 
+package com.countvajhula.splinter
+
 import com.countvajhula.pilot.GraphInterface.GraphProvider
 import StressTester
 import StressTester.GraphConnectivity
 
 //N, connectivity-string, out is >
-public class GraphTestManager {
+/** Graph test manager. Reads and parses test definition from input XML file; initializes
+ * and launches stress testers with configured parameters for each graph.
+ */
+public class Splinter {
 
 	public static List<Map<String,Object>> parseTestMatrixFromXML(File xmlFile) {
 
@@ -81,12 +86,12 @@ public class GraphTestManager {
 	public static void main(String[] args) {
 
 		if (!args || args.size() == 0) {
-			println "Usage ./GraphTestManager <testdefinitionfile.xml>"
+			println "Usage ./Splinter <testdefinitionfile.xml>"
 			return
 		}
 
 		print "Parsing XML file to build test matrix..."
-		List<Map<String,Object>> testMatrix = GraphTestManager.parseTestMatrixFromXML(new File(args[0]))
+		List<Map<String,Object>> testMatrix = Splinter.parseTestMatrixFromXML(new File(args[0]))
 		println "...done."
 
 		println "Running tests..."

@@ -1,10 +1,12 @@
+package com.countvajhula.splinter
+
 import com.tinkerpop.blueprints.*
 import com.tinkerpop.blueprints.pgm.*
 import com.tinkerpop.blueprints.pgm.impls.neo4j.*
 import com.tinkerpop.blueprints.pgm.impls.orientdb.*
 import com.tinkerpop.blueprints.pgm.util.*
 import com.countvajhula.pilot.*
-import GSTUtils
+import SplinterUtils
 import StressTester
 
 
@@ -24,7 +26,7 @@ public class TestMetrics {
 		GraphManagerProxy.startProfiler((GraphInterface)graph, testHeader)
 
 		for (int i=0; i<ntimes; i++) {
-			Vertex v1 = GSTUtils.selectRandomVertex(graph, numVertices)
+			Vertex v1 = SplinterUtils.selectRandomVertex(graph, numVertices)
 			if (v1) {
 				def neighbors = graph.getNeighbors(v1, null, null) //
 			}
@@ -50,8 +52,8 @@ public class TestMetrics {
 		GraphManagerProxy.startProfiler((GraphInterface)graph, testHeader)
 
 		for (int i=0; i<ntimes; i++) {
-			Vertex v1 = GSTUtils.selectRandomVertex(graph, numVertices)
-			Vertex v2 = GSTUtils.selectRandomVertex(graph, numVertices)
+			Vertex v1 = SplinterUtils.selectRandomVertex(graph, numVertices)
+			Vertex v2 = SplinterUtils.selectRandomVertex(graph, numVertices)
 			if (v1 && v2) {
 				Edge edge = graph.getEdges(v1, v2, null)[0]
 			}
