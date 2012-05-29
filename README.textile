@@ -1,6 +1,6 @@
 h1. Introduction
 
-A simple automated graph stress test tool based on the Pilot graph operator, utilizing the Tinkerpop stack -- i.e. Blueprints, Gremlin, Pipes. You can use it to:
+A simple automated graph stress test tool based on the "Pilot":https://github.com/countvajhula/pilot graph operator, utilizing the "Tinkerpop":http://tinkerpop.com stack -- i.e. "Blueprints":https://github.com/tinkerpop/blueprints/wiki, "Gremlin":https://github.com/tinkerpop/gremlin/wiki, "Pipes":https://github.com/tinkerpop/pipes/wiki. You can use it to:
 * *quickly generate random graphs* of whatever configuration you want (you can specify number of vertices and level of connectivity)
 * *benchmark* different graph database providers on some defined metrics
 * *automate* sets of tests to be run on any number of graphs
@@ -23,7 +23,7 @@ Make sure you have Pilot, the Tinkerpop libraries, and your favorite graph datab
 
 h3. Running
 
-Copy the sources in src/main/groovy/com/countvajhula/splinter/ to a desired location and _cd_ into that directory.
+Copy the sources in src/main/groovy/com/countvajhula/splinter/ to a desired location and _cd_ into that directory. Then:
 
 bc. $ groovyc *.groovy
 $ ./Splinter.groovy <testdefinitionfile.xml>
