@@ -7,16 +7,30 @@ A simple automated graph stress test tool based on the Pilot graph operator, uti
 
 h1. To Use:
 
-h2. Dependencies
+h2. For Maven Users
+
+bc. $ mvn exec:java -Dexec.args="sampletestdefinition.xml"
+
+p. In the above command, any test definition XML file may be used in place of the example sampletestdefinition.xml file provided.
+
+h2. Non-Maven
+
+h3. Dependencies
 
 Make sure you have Pilot, the Tinkerpop libraries, and your favorite graph database already in your system CLASSPATH.
 
-h2. Running
+h3. Running
+
+Copy the sources in src/main/groovy/com/countvajhula/splinter/ to a desired location and _cd_ into that directory.
 
 bc. $ groovyc *.groovy
-$ ./GraphTestManager.groovy <testdefinitionfile.xml>
+$ ./Splinter.groovy <testdefinitionfile.xml>
 
-p. The test definition file is pretty straightforward XML (see sampletestdefinition.xml for a comprehensive example) like so:
+p. As an example, the provided sampletestdefinition.xml file may be used in the above command.
+
+h2. Test Definition
+
+The test definition file is pretty straightforward XML (see sampletestdefinition.xml for a comprehensive example) like so:
 
 bc. <sampletestdefinition>
 	<graphs>
