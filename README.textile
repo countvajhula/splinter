@@ -11,7 +11,8 @@ h2. For Maven Users
 
 After downloading the project, just:
 
-bc. $ mvn exec:java -Dexec.args="sampletestdefinition.xml"
+bc. $ mvn clean install
+$ mvn exec:java -Dexec.args="sampletestdefinition.xml"
 
 p. In the above command, any test definition XML file may be used in place of the example sampletestdefinition.xml file provided.
 
