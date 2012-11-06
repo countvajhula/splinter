@@ -12,13 +12,6 @@
 	<description>A Simple Graph Stress Tester</description>
 
 	<repositories>
-		<!--
-		<repository>
-			<id>tinkerpop-repository</id>
-			<name>TinkerPop Maven2 Repository</name>
-			<url>http://tinkerpop.com/maven2</url>
-		</repository>
-		-->
 		<repository>
 			<id>central</id>
 			<name>Maven Repository Switchboard</name>

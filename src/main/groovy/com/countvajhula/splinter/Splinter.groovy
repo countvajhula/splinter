@@ -86,10 +86,11 @@ public class Splinter {
 	public static void main(String[] args) {
 
 		if (!args || args.size() == 0) {
-			println "Usage ./Splinter <testdefinitionfile.xml>"
+			println "\n\nUsage ./Splinter <testdefinitionfile.xml>\n"
 			return
 		}
 
+		println "\n\nSplinter initializing..."
 		print "Parsing XML file to build test matrix..."
 		List<Map<String,Object>> testMatrix = Splinter.parseTestMatrixFromXML(new File(args[0]))
 		println "...done."
